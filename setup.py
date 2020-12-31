@@ -11,7 +11,7 @@ setuptools.setup(
     author=TOOLS.author,
     author_email=TOOLS.author_email,
     packages=setuptools.find_packages(),
-    url='https://github.com/zmarffy/reequirements',
+    url='https://github.com/zmarffy/filemanips',
     license='MIT',
     description='File manipulation functions',
     python_requires=TOOLS.minimum_version_required,

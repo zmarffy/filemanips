@@ -76,3 +76,4 @@ def delete(src):
         shutil.rmtree(src)
     else:
         os.remove(src)
+    LOGGER.info(f"Deleted {src}")
