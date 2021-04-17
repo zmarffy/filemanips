@@ -1,10 +1,11 @@
-import enum
+from enum import Enum
 import logging
 import os
 import shutil
+from typing import Callable, Union
 
 
-class FileManipFunctions(enum.IntEnum):
+class FileManipFunctions(Enum):
     MOVE = 0
     COPY = 1
 
@@ -12,22 +13,22 @@ class FileManipFunctions(enum.IntEnum):
 LOGGER = logging.getLogger(__name__)
 
 
-def move(src, dest):
+def move(src: Union[str, os.PathLike], dest: Union[str, os.PathLike]):
     """Move a file or folder to a destination. If the destination does not exist, including any folders along the way, it will be created
 
     Args:
-        src (str): Source file/folder
-        dest (str): Destination file/folder
+        src (Union[str, os.PathLike]): Source file/folder
+        dest (Union[str, os.PathLike]): Destination file/folder
     """
     _file_manip_base_function(src, dest, FileManipFunctions.MOVE)
 
 
-def copy(src, dest):
+def copy(src: Union[str, os.PathLike], dest: Union[str, os.PathLike]):
     """Copy a file or folder to a destination. If the destination does not exist, including any folders along the way, it will be created
 
     Args:
-        src (str): Source file/folder
-        dest (str): Destination file/folder
+        src (Union[str, os.PathLike]): Source file/folder
+        dest (Union[str, os.PathLike]): Destination file/folder
 
     Raises:
         FileNotFoundError: If the source file is not found
@@ -36,7 +37,12 @@ def copy(src, dest):
     _file_manip_base_function(src, dest, FileManipFunctions.COPY)
 
 
-def _file_manip_base_function(src, dest, func):
+def _file_manip_base_function(src: Union[str, os.PathLike], dest: Union[str, os.PathLike], func: Callable):
+
+    for param in [src, dest]:
+        if isinstance(param, os.PathLike):
+            param = str(param)
+
     specified_dest_is_folder = dest.endswith(os.sep)
     if not os.path.exists(src):
         raise FileNotFoundError(f"{src} does not exist")
@@ -66,11 +72,11 @@ def _file_manip_base_function(src, dest, func):
         LOGGER.info(f"{src} => {dest}")
 
 
-def delete(src):
+def delete(src: Union[str, os.PathLike]):
     """Delete a file or folder
 
     Args:
-        src (str): File/folder to delete
+        src (Union[str, os.PathLike]): File/folder to delete
     """
     if os.path.isdir(src):
         shutil.rmtree(src)
